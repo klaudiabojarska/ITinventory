@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<h:outputStylesheet library="css" name="table-style.css" />
+</h:head>
+
+<h:body>
+
+	<h:panelGroup rendered="#{login.user!=null and session.getAttribute('canReadUser')}">
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/home.xhtml'"
+			value="Home"/>
+		<h:commandButton style="width: 120px "   disabled="true" 
+			onclick="window.location.href='/InventoryProject/users.xhtml'" 
+			value="Users" rendered="#{session.getAttribute('canReadUser')}"/>
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/groups.xhtml'"
+			value="User groups" rendered="#{session.getAttribute('canReadGroup')}"/>
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/devices.xhtml'"
+			value="Devices" rendered="#{session.getAttribute('canReadDevice')}"/>
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/consumables.xhtml'"
+			value="Consumables" rendered="#{session.getAttribute('canReadConsumables')}"/>
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/repairs.xhtml'"
+			value="Repairs" rendered="#{session.getAttribute('canReadRepair')}"/>
+			
+			
+		<h1>Users</h1>
+		<h:messages style="color:red" />
+	
+		<h:panelGroup rendered="#{!user.edit}">
+			<h:form>
+	
+				<h:dataTable value="SearchAndAddUsers">
+					<f:facet name="header">
+	        	Search / add user
+	    	</f:facet>
+	
+					<h:column>
+						<h:outputText value="Login" />
+						<br></br>
+						<h:inputText id="login" value="#{user.item.login}" size="20"
+							required="#{empty param['skipvalidation']}" label="login">
+							<f:validateLength minimum="3" maximum="20" />
+						</h:inputText>
+						<br></br>
+	
+						<h:outputText value="Address:" />
+						<br></br>
+						<h:inputText id="address" value="#{user.item.address}" size="20"
+							required="#{empty param['skipvalidation']}" label="address">
+							<f:validateLength minimum="3" maximum="255" />
+						</h:inputText>
+					</h:column>
+	
+					<h:column>
+						<h:outputText value="First name" />
+						<br></br>
+						<h:inputText id="f_name" value="#{user.item.f_name}" size="20"
+							required="#{empty param['skipvalidation']}" label="f_name">
+							<f:validateLength minimum="3" maximum="20" />
+						</h:inputText>
+						<br></br>
+	
+						<h:outputText value="Password:" />
+						<br></br>
+						<h:inputSecret id="password" value="#{user.item.password}"
+							size="20" required="#{empty param['skipvalidation']}"
+							label="password">
+							<f:validateLength minimum="6" maximum="20" />
+						</h:inputSecret>
+					</h:column>
+	
+					<h:column>
+						<h:outputText value="Last name:" />
+						<br></br>
+						<h:inputText id="l_name" value="#{user.item.l_name}" size="20"
+							required="#{empty param['skipvalidation']}" label="l_name">
+							<f:validateLength minimum="3" maximum="20" />
+						</h:inputText>
+						<br></br>
+						<h:outputText value="Confirm password:" />
+						<br></br>
+						<h:inputSecret id="password2" value="#{user.item.password}"
+							size="20" required="#{empty param['skipvalidation']}"
+							label="password2">
+							<f:validateLength minimum="6" maximum="20" />
+						</h:inputSecret>
+					</h:column>
+					
+					<h:column> <br></br> 
+						User <br></br>group:
+						<br></br>
+						<h:selectOneMenu value="#{user.selectedGroup}" converter="groupConverter"
+										style="width:165px; height:20px">
+							<f:selectItem itemValue="#{null}" itemLabel=""/>
+							<f:selectItems value="#{group.list}" var="g"
+								itemValue="#{g}" itemLabel="#{g.name}"/>
+						</h:selectOneMenu>
+					</h:column>
+						
+											
+	
+	
+					<f:facet name="footer">
+						<p>
+							<h:commandButton value="search" action="#{user.search}" >
+								<f:param name="skipvalidation" value="1" />
+							</h:commandButton>
+							<h:commandButton value="add" action="#{user.add}" />
+							<h:commandButton value="reset" action="#{user.resetAdd}"
+								immediate="true" />
+						</p>
+					</f:facet>
+				</h:dataTable>
+	
+			</h:form>
+		</h:panelGroup>
+	
+		<h:panelGroup rendered="#{user.edit}">
+			<h:form>
+				<h:dataTable value="EditUsers">
+					<f:facet name="header">
+	        	Edit #{user.item.f_name} #{user.item.l_name}
+	    	</f:facet>
+	
+					<h:column>
+						<h:outputText value="Login" />
+						<br></br>
+						<h:inputText id="login" value="#{user.item.login}" size="20"
+							required="true" label="login" readonly="true">
+							<f:validateLength minimum="3" maximum="20" />
+						</h:inputText>
+						<br></br>
+	
+						<h:outputText value="Address:" />
+						<br></br>
+						<h:inputText id="address" value="#{user.item.address}" size="20"
+							required="true" label="address">
+							<f:validateLength minimum="3" maximum="255" />
+						</h:inputText>
+					</h:column>
+	
+					<h:column>
+						<h:outputText value="First name" />
+						<br></br>
+						<h:inputText id="f_name" value="#{user.item.f_name}" size="20"
+							required="true" label="f_name">
+							<f:validateLength minimum="3" maximum="20" />
+						</h:inputText>
+						<br></br>
+	
+						<h:outputText value="Password:" />
+						<br></br>
+						<h:inputSecret id="password" value="#{user.item.password}"
+							size="20" required="false" label="password">
+							<f:validateLength minimum="6" maximum="20" />
+						</h:inputSecret>
+					</h:column>
+	
+					<h:column>
+						<h:outputText value="Last name:" />
+						<br></br>
+						<h:inputText id="l_name" value="#{user.item.l_name}" size="20"
+							required="true" label="l_name">
+							<f:validateLength minimum="3" maximum="20" />
+						</h:inputText>
+						<br></br>
+						<h:outputText value="Confirm password:" />
+						<br></br>
+						<h:inputSecret id="password2" value="#{user.item.password}"
+							size="20" required="false" label="password2">
+							<f:validateLength minimum="6" maximum="20" />
+						</h:inputSecret>
+					</h:column>
+					
+					<h:column> <br></br> 
+						User <br></br>group:
+						<br></br>
+						
+						<h:selectOneMenu value="#{user.selectedGroup}" converter="groupConverter"
+										style="width:165px; height:20px">
+							<f:selectItem itemValue="#{user.selectedGroup}" itemLabel=""/>
+							<f:selectItems value="#{group.list}" var="g"
+								itemValue="#{g}" itemLabel="#{g.name}"/>
+						</h:selectOneMenu>
+						
+					</h:column>
+					
+					<f:facet name="footer">
+						<p>
+							<h:commandButton value="save" action="#{user.saveEdit}" />
+							<h:commandButton value="cancel" immediate="true" action="#{user.cancelEdit}" />
+						</p>
+					</f:facet>
+				</h:dataTable>
+			</h:form>
+		</h:panelGroup>
+	
+		<h:form rendered="#{not empty user.getUserList()}">
+			<h:dataTable value="#{user.list}" var="u" styleClass="order-table"
+				headerClass="order-table-header"
+				rowClasses="order-table-odd-row,order-table-even-row">
+	
+				<h:column>
+					<f:facet name="header">
+		    				User ID
+		    			</f:facet>
+		    				#{u.id}
+		    		</h:column>
+	
+				<h:column>
+					<f:facet name="header">
+		    				Login
+						</f:facet>
+		    				#{u.login}
+		    		</h:column>
+	
+				<h:column>
+					<f:facet name="header">
+		    				First name
+						</f:facet>
+		    				#{u.f_name}
+		    		</h:column>
+	
+				<h:column>
+					<f:facet name="header">
+		    				Last name
+						</f:facet>
+		    				#{u.l_name}
+		    		</h:column>
+	
+				<h:column>
+					<f:facet name="header">
+		    				Address
+						</f:facet>
+		    				#{u.address}
+		    		</h:column>
+	
+				<h:column>
+					<f:facet name="header">
+		    				User group
+						</f:facet>
+		    				#{u.group_name}
+		    		</h:column>
+	
+				<h:column>
+					<f:facet name="header">
+		    				Created Date
+						</f:facet>
+		    				#{u.time_create}
+		    		</h:column>
+	
+				<h:column rendered="#{session.getAttribute('canEditUser')}">
+					<f:facet name="header">
+		    				Edit
+						</f:facet>
+					<h:commandButton value="edit" action="#{user.edit(u, group)}" />
+					<h:commandButton value="delete" action="#{user.delete(u)}" />
+				</h:column>
+	
+			</h:dataTable>
+		</h:form>
+	
+		<h:panelGroup rendered="#{empty user.list}">
+			<p>No users</p>
+		</h:panelGroup>
+	
+
+	</h:panelGroup>
+	
+	<h:panelGroup rendered="#{login.user==null}">
+		<h:link outcome="login" value="Go to login page" />
+	</h:panelGroup>
+	</h:body>
+
+</html>

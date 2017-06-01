@@ -1,0 +1,8 @@
+<Context>
+
+  <Resource name="jdbc/webprog2" auth="Container" type="javax.sql.DataSource"
+               maxActive="100" maxIdle="30" maxWait="10000"
+               username="webprog2" password="webprog2" driverClassName="com.mysql.jdbc.Driver"
+               url="jdbc:mysql://localhost:3306/webprog2"/>
+
+</Context>

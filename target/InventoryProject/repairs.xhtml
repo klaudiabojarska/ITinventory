@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<h:outputStylesheet library="css" name="table-style.css" />
+</h:head>
+
+<h:body>
+	<h:panelGroup rendered="#{login.user!=null and session.getAttribute('canReadRepair')}">
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/home.xhtml'"
+			value="Home"/>
+		<h:commandButton style="width: 120px "
+			onclick="window.location.href='/InventoryProject/users.xhtml'" 
+			value="Users" rendered="#{session.getAttribute('canReadUser')}"/>
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/groups.xhtml'"
+			value="User groups" rendered="#{session.getAttribute('canReadGroup')}"/>
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/devices.xhtml'"
+			value="Devices" rendered="#{session.getAttribute('canReadDevice')}"/>
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/consumables.xhtml'"
+			value="Consumables" rendered="#{session.getAttribute('canReadConsumables')}"/>
+		<h:commandButton style="width: 120px" disabled="true" 
+			onclick="window.location.href='/InventoryProject/repairs.xhtml'"
+			value="Repairs" rendered="#{session.getAttribute('canReadRepair')}"/>
+	
+		<h1>Repairs</h1>
+		<h:messages style="color:red" />
+	
+		<h:form rendered="#{!repair.edit}">
+	
+			<h:dataTable value="SearchAndAddRepairs">
+				<f:facet name="header">
+			        Search / add repair
+			    </f:facet>
+	
+				<h:column>
+					<h:outputText value="Name:" />
+					<br></br>
+					<h:inputText id="name" value="#{repair.item.name}" size="20"
+						required="#{empty param['skipvalidation']}" label="name">
+						<f:validateLength minimum="2" maximum="20" />
+					</h:inputText>
+					<br></br>
+	
+					<h:outputText value="Device name:" />
+					<br></br>
+					<h:selectOneMenu value="#{repair.selectedDevice}" converter="deviceConverter"
+						 				style="width:165px; height:20px">
+						<f:selectItem itemValue="#{null}" itemLabel=""/>
+						<f:selectItems value="#{device.list}" var="d"
+						        itemValue="#{d}" itemLabel="#{d.name}" />
+					</h:selectOneMenu> 
+	
+				</h:column>
+	
+				<h:column>
+					<h:outputText value="Description:" />
+					<br></br>
+					<h:inputText id="description" value="#{repair.item.description}"
+						size="20" required="#{empty param['skipvalidation']}"
+						label="description">
+						<f:validateLength minimum="2" maximum="255" />
+					</h:inputText>
+					<br></br>
+					
+					
+				
+				<h:outputText value="Repairer name:" />
+					<br></br>
+					<h:selectOneMenu value="#{repair.selectedRepairer}" converter="userConverter"
+						 				style="width:165px; height:20px">
+						<f:selectItem itemValue="#{null}" itemLabel="" />
+						<f:selectItems value="#{user.list}" var="r"
+						        itemLabel="#{r.f_name} #{r.l_name}" itemValue="#{r}" />
+					</h:selectOneMenu> 
+					<br></br>
+					</h:column>
+	
+				 <h:column>
+					<h:outputText value="Owner name:" />
+					<br></br>
+					<h:selectOneMenu value="#{repair.selectedOwner}" converter="userConverter"
+						 				style="width:165px; height:20px">
+						<f:selectItem itemValue="#{null}" itemLabel=""/>
+						<f:selectItems value="#{user.list}" var="o"
+						        itemLabel="#{o.f_name} #{o.l_name}" itemValue="#{o}" />
+					</h:selectOneMenu>
+					<br></br>
+					<br></br>
+					<br></br>
+				</h:column>
+				
+				<f:facet name="footer">
+					<p>
+						<h:commandButton value="search" action="#{repair.search}">
+							<f:param name="skipvalidation" value="1" />
+						</h:commandButton>
+						<h:commandButton value="add" action="#{repair.add}" rendered="#{session.getAttribute('canCreateRepair')}"/>
+						<h:commandButton value="reset" action="#{repair.resetAdd}"
+							immediate="true" />
+					</p>
+				</f:facet>
+			</h:dataTable>
+	
+		</h:form>
+	
+		<h:panelGroup rendered="#{repair.edit}">
+			<h:form>
+				<h:dataTable value="EditUsers">
+					<f:facet name="header">
+			        	Edit #{repair.item.name}
+			    	</f:facet>
+	
+				<h:column>
+					<h:outputText value="Name:" />
+					<br></br>
+					<h:inputText id="name" value="#{repair.item.name}" size="20"
+						required="true" label="name">
+						<f:validateLength minimum="2" maximum="20" />
+					</h:inputText>
+					<br></br>
+	
+					<h:outputText value="Device name:" />
+					<br></br>
+					<h:selectOneMenu value="#{repair.selectedDevice}" converter="deviceConverter"
+						 				style="width:165px; height:20px">
+						<f:selectItem itemValue="#{null}" itemLabel=""/>
+						<f:selectItems value="#{device.list}" var="d"
+						        itemLabel="#{d.name}" itemValue="#{d}" />
+					</h:selectOneMenu> 
+	
+				</h:column>
+	
+				<h:column>
+					<h:outputText value="Description:" />
+					<br></br>
+					<h:inputText id="description" value="#{repair.item.description}"
+						size="20" required="false"
+						label="description">
+						<f:validateLength minimum="2" maximum="255" />
+					</h:inputText>
+					<br></br>
+					
+					<h:outputText value="Date of repair:" />
+					<br></br>
+					
+					<!-- <h:inputText type="date" id="repair_date" value="#{repair.item.repair_date}"
+						 converter="DateConverter"
+						size="20" required="true"
+						label="repair_date">
+						<f:convertDateTime pattern="yyyy-MM-dd" />
+					</h:inputText> -->
+				</h:column>
+	
+				 <h:column>
+				<h:outputText value="Repairer name:" />
+					<br></br>
+					<h:selectOneMenu value="#{repair.selectedRepairer}" converter="userConverter"
+						 				style="width:165px; height:20px">
+						<f:selectItem value="#{null}" label="" />
+						<f:selectItems value="#{user.list}" var="r"
+						        itemLabel="#{r.f_name} #{r.l_name}" itemValue="#{r}" />
+					</h:selectOneMenu> 
+					<br></br>
+					
+					<h:outputText value="Owner name:" />
+					<br></br>
+					<h:outputText value="#{repair.item.owner}">
+					</h:outputText>
+					<!-- <h:selectOneMenu value="#{repair.item.owner}">
+						<f:selectItems value="#{user.list}" var="r"
+						        itemLabel="#{r.f_name} #{r.l_name}" itemValue="#{r.id}" />
+					</h:selectOneMenu> -->
+				</h:column>
+				
+				<f:facet name="footer">
+					<p>
+						<h:commandButton value="save" action="#{repair.saveEdit}" />
+						<h:commandButton value="cancel" immediate="true" action="#{repair.cancelEdit}" />
+					</p>
+				</f:facet>
+				</h:dataTable>
+			</h:form>
+		</h:panelGroup>
+	
+	
+		<h:form rendered="#{not empty repair.getRepairList(
+		session.getAttribute('ownedByUser'), session.getAttribute('userid'))}">
+			<h:dataTable value="#{repair.list}" var="r" styleClass="order-table"
+				headerClass="order-table-header"
+				rowClasses="order-table-odd-row,order-table-even-row">
+	
+				<h:column>
+					<f:facet name="header">
+		    				Repair ID
+		    			</f:facet>
+		    				#{r.id}
+		    		</h:column>
+	
+				<h:column>
+					<f:facet name="header">
+		    				Name
+						</f:facet>
+		    				#{r.name}
+		    		</h:column>
+	
+				<h:column>
+					<f:facet name="header">
+		    				Device
+						</f:facet>
+		    				#{r.device_name}
+		    		</h:column>
+	
+				<h:column>
+					<f:facet name="header">
+		    				Repairer
+						</f:facet>
+		    				#{r.repairer}
+		    		</h:column>
+	
+				<h:column>
+					<f:facet name="header">
+		    				Owner
+						</f:facet>
+		    				#{r.owner}
+		    	</h:column>
+	
+				<!-- <h:column>
+					<f:facet name="header">
+		    				Notes
+						</f:facet>
+		    				#{r.notes}
+		    		</h:column> -->
+		    		
+				<h:column>
+					<f:facet name="header">
+		    				Description
+						</f:facet>
+		    				#{r.description}
+		    		</h:column>
+	
+				<h:column>
+					<f:facet name="header">
+		    				Edit
+						</f:facet>
+					<h:commandButton value="edit" action="#{repair.edit(r, user, device)}" />
+					<h:commandButton value="delete" action="#{repair.delete(r)}" />
+				</h:column>
+	
+			</h:dataTable>
+		</h:form>
+	
+		<h:panelGroup rendered="#{empty repair.list}">
+			<p>No repairs</p>
+		</h:panelGroup>
+	</h:panelGroup>
+
+	<h:panelGroup rendered="#{login.user==null}">
+		<h:link outcome="login" value="Go to login page" />
+	</h:panelGroup>
+</h:body>
+
+</html>

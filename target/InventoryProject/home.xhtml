@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+	
+<h:head>
+	<h:outputStylesheet library="css" name="table-style.css" />
+</h:head>
+
+<h:body>
+	<h:panelGroup  rendered="#{login.user!=null}">
+	
+	<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/home.xhtml'"
+			value="Home" disabled="true" />
+		<h:commandButton style="width: 120px " 
+			onclick="window.location.href='/InventoryProject/users.xhtml'" 
+			value="Users" rendered="#{session.getAttribute('canReadUser')}"/>
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/groups.xhtml'"
+			value="User groups" rendered="#{session.getAttribute('canReadGroup')}"/>
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/devices.xhtml'"
+			value="Devices" rendered="#{session.getAttribute('canReadDevice')}"/>
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/consumables.xhtml'"
+			value="Consumables" rendered="#{session.getAttribute('canReadConsumables')}"/>
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/repairs.xhtml'"
+			value="Repairs" rendered="#{session.getAttribute('canReadRepair')}"/>
+		
+			
+		<p>Welcome #{session.getAttribute("username")}</p>
+		<p>Group no.#{session.getAttribute("usergroup")}</p>
+		<h:form>
+			<h:commandLink action="#{login.logout}" value="Logout"></h:commandLink>
+		</h:form>
+	</h:panelGroup>
+	
+	
+	<h:panelGroup rendered="#{login.user==null}">
+		<h:form>
+			<h:link outcome="login" value="Go to login page" />
+		</h:form>
+	</h:panelGroup>
+	
+	</h:body>
+
+</html>

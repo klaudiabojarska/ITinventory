@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<h:outputStylesheet library="css" name="table-style.css" />
+</h:head>
+
+<h:body>
+	<h:panelGroup rendered="#{login.user!=null and session.getAttribute('canReadDevice')}">
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/home.xhtml'"
+			value="Home"/>
+		<h:commandButton style="width: 120px "
+			onclick="window.location.href='/InventoryProject/users.xhtml'" value="Users"
+			rendered="#{session.getAttribute('canReadUser')}"/>
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/groups.xhtml'"
+			value="User groups" rendered="#{session.getAttribute('canReadGroup')}"/>
+		<h:commandButton style="width: 120px" disabled="true" 
+			onclick="window.location.href='/InventoryProject/devices.xhtml'"
+			value="Devices" rendered="#{session.getAttribute('canReadDevice')}"/>
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/consumables.xhtml'"
+			value="Consumables" rendered="#{session.getAttribute('canReadConsumables')}"/>
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/repairs.xhtml'"
+			value="Repairs" rendered="#{session.getAttribute('canReadRepair')}"/>
+	
+		<h1>Devices</h1>
+		<h:messages style="color:red" />
+	
+		<h:form rendered="#{!device.edit}">
+	
+			<h:dataTable value="SearchAndAddDevices">
+				<f:facet name="header">
+			        Search / add device
+			    </f:facet>
+	
+				<h:column>
+					<h:outputText value="Name:" />
+					<br></br>
+					<h:inputText id="name" value="#{device.item.name}" size="20"
+						required="#{empty param['skipvalidation']}" label="name">
+						<f:validateLength minimum="2" maximum="20" />
+					</h:inputText>
+					<br></br>
+					
+					<h:outputText value="Address MAC:" />
+					<br></br>
+					<h:inputText id="mac" value="#{device.item.mac}" size="20"
+						required="false" label="mac">
+						<f:validateLength length="17" />
+					</h:inputText>
+	
+				</h:column>
+	
+				<h:column>
+					
+					<h:outputText value="Producer:" />
+					<br></br>
+					<h:inputText id="producer" value="#{device.item.producer}"  >
+						size="20" required="#{empty param['skipvalidation']}"
+						label="producer">
+						<f:validateLength minimum="2" maximum="20" />
+					</h:inputText>
+					<br></br>
+					
+					<h:outputText value="Notes:" />
+					<br></br>
+					<h:inputText id="notes" value="#{device.item.notes}" size="20" 
+						required="false" label="notes" >
+						<f:validateLength maxlength="255" />
+					</h:inputText>
+				</h:column>
+	
+				<h:column>
+					<h:outputText value="Owner:" />
+					<br></br>
+					<h:selectOneMenu value="#{device.selectedUser}" converter="userConverter" 
+									style="width:165px; height:20px"><!-- 
+						    <f:selectItem itemValue="#{null}" itemLabel=""/>
+							<f:selectItem itemValue="#{device.selectedUser}" /> -->
+						    <f:selectItem itemValue="#{null}" itemLabel=""/>
+							<f:selectItems value="#{user.list}" var="o"
+								itemValue="#{o}" itemLabel="#{o.f_name} #{o.l_name}"/>
+						</h:selectOneMenu>
+					<br></br>
+					<h:outputText value="Type:" />
+					<br></br>
+					<h:selectOneMenu value="#{device.item.type}" style="width:165px; height:20px">
+						    <f:selectItem itemValue="#{null}" itemLabel=""/>
+						    <f:selectItem itemValue="desktop" itemLabel="desktop"/>
+						    <f:selectItem itemValue="laptop" itemLabel="laptop"/>
+						    <f:selectItem itemValue="printer" itemLabel="printer"/>
+						    <f:selectItem itemValue="tablet" itemLabel="tablet"/>
+						    <f:selectItem itemValue="mobile phone" itemLabel="mobile phone"/>
+						    <f:selectItem itemValue="other" itemLabel="other"/>
+						</h:selectOneMenu>
+				</h:column>
+				
+	
+				<f:facet name="footer">
+					<p>
+						<h:commandButton value="search" action="#{device.search}">
+							<f:param name="skipvalidation" value="1" />
+						</h:commandButton>
+						<h:commandButton value="add" action="#{device.add}" rendered="#{session.getAttribute('canCreateDevice')}"/>
+						<h:commandButton value="reset" action="#{device.resetAdd}"
+							immediate="true" />
+					</p>
+				</f:facet>
+			</h:dataTable>
+	
+		</h:form>
+	
+		<h:panelGroup rendered="#{device.edit}">
+			<h:form>
+				<h:dataTable value="EditUsers">
+					<f:facet name="header">
+	        	Edit #{device.item.name}
+	    	</f:facet>
+	
+					<h:column>
+						<h:outputText value="Name" />
+						<br></br>
+						<h:inputText id="name" value="#{device.item.name}" size="20"
+							required="true" label="name">
+							<f:validateLength minimum="2" maximum="20" />
+						</h:inputText>
+						<br></br>
+						
+						<h:outputText value="Address MAC" />
+						<br></br>
+						<h:inputText id="mac" value="#{device.item.mac}" size="20"
+							required="false" label="mac">
+							<f:validateLength length="17" />
+						</h:inputText>
+						<br></br>
+					</h:column>
+	
+					<h:column>
+						<h:outputText value="Producer:" />
+						<br></br>
+						<h:inputText id="producer" value="#{device.item.producer}"
+							size="20" required="false" label="producer">
+							<f:validateLength minimum="2" maximum="20" />
+						</h:inputText>
+						<br></br>
+						
+						<h:outputText value="Notes:" />
+						<br></br>
+						<h:inputText id="notes" value="#{device.item.notes}" size="20"
+							required="false" label="notes">
+							<f:validateLength maxlenght="255" />
+						</h:inputText>
+					</h:column>
+	
+					<h:column>
+						<h:outputText value="Owner:" />
+						<br></br>
+							
+						<h:selectOneMenu value="#{device.selectedUser}" converter="userConverter"
+						 				style="width:165px; height:20px">
+							<f:selectItem itemValue="#{device.selectedUser}" />
+							<f:selectItems value="#{user.list}" var="o"
+								itemValue="#{o}" itemLabel="#{o.f_name} #{o.l_name}"/>
+						</h:selectOneMenu>
+						<br></br>
+						
+						<!-- <h:inputText id="user_id" value="#{device.item.user_id}"
+							size="20" required="false" label="user_id">
+							<f:validateLength maximum="20" />
+						</h:inputText> -->
+						
+						<h:outputText value="Type:" />
+						<br></br>
+						<h:selectOneMenu value="#{device.item.type}"
+						 				style="width:165px; height:20px">
+						    <f:selectItem itemValue="desktop" itemLabel="desktop"/>
+						    <f:selectItem itemValue="laptop" itemLabel="laptop"/>
+						    <f:selectItem itemValue="printer" itemLabel="printer"/>
+						    <f:selectItem itemValue="tablet" itemLabel="tablet"/>
+						    <f:selectItem itemValue="mobile phone" itemLabel="mobile phone"/>
+						    <f:selectItem itemValue="other" itemLabel="other"/>
+						</h:selectOneMenu>
+						
+					</h:column>
+					
+					<f:facet name="footer">
+						<p>
+							<h:commandButton value="save" action="#{device.saveEdit}" />
+							<h:commandButton value="cancel" immediate="true" action="#{device.cancelEdit}" />
+						</p>
+					</f:facet>
+				</h:dataTable>
+			</h:form>
+		</h:panelGroup>
+	
+	
+		<h:form rendered="#{not empty device.getDeviceList(
+		session.getAttribute('ownedByUser'), session.getAttribute('userid')
+		)}">
+			<h:dataTable value="#{device.list}" var="d" styleClass="order-table"
+				headerClass="order-table-header"
+				rowClasses="order-table-odd-row,order-table-even-row">
+	
+				<h:column>
+					<f:facet name="header">
+		    				Device ID
+		    			</f:facet>
+		    				#{d.id}
+		    		</h:column>
+	
+				<h:column>
+					<f:facet name="header">
+		    				Name
+						</f:facet>
+		    				#{d.name}
+		    		</h:column>
+	
+				<h:column>
+					<f:facet name="header">
+		    				Type
+						</f:facet>
+		    				#{d.type}
+		    		</h:column>
+	
+				<h:column>
+					<f:facet name="header">
+		    				Address MAC
+						</f:facet>
+		    				#{d.mac}
+		    		</h:column>
+	
+				<h:column>
+					<f:facet name="header">
+		    				Owner
+						</f:facet>
+		    				#{d.owner}
+		    		</h:column>
+	
+				<h:column>
+					<f:facet name="header">
+		    				Notes
+						</f:facet>
+		    				#{d.notes}
+		    		</h:column>
+	
+				<h:column>
+					<f:facet name="header">
+		    				Producer
+						</f:facet>
+		    				#{d.producer}
+		    		</h:column>
+	
+				<h:column rendered="#{session.getAttribute('canEditDevice')}">
+					<f:facet name="header">
+		    				Edit
+						</f:facet>
+					<h:commandButton value="edit" action="#{device.edit(d, user)}" />
+					<h:commandButton value="delete" action="#{device.delete(d)}" />
+				</h:column>
+	
+			</h:dataTable>
+		</h:form>
+	
+		<h:panelGroup rendered="#{empty device.list}">
+			<p>No devices</p>
+		</h:panelGroup>
+	
+
+	</h:panelGroup>
+
+	<h:panelGroup rendered="#{login.user==null}">
+		<h:link outcome="login" value="Go to login page" />
+	</h:panelGroup>
+</h:body>
+
+</html>

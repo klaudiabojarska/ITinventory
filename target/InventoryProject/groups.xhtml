@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<h:outputStylesheet library="css" name="table-style.css" />
+</h:head>
+
+<h:body>
+	<h:panelGroup rendered="#{login.user!=null}">
+	<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/home.xhtml'"
+			value="Home"/>
+		<h:commandButton style="width: 120px "
+			onclick="window.location.href='/InventoryProject/users.xhtml'" 
+			value="Users" rendered="#{session.getAttribute('canReadUser')}"/>
+		<h:commandButton style="width: 120px" disabled="true" 
+			onclick="window.location.href='/InventoryProject/groups.xhtml'"
+			value="User groups" rendered="#{session.getAttribute('canReadGroup')}"/>
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/devices.xhtml'"
+			value="Devices" rendered="#{session.getAttribute('canReadDevice')}"/>
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/consumables.xhtml'"
+			value="Consumables" rendered="#{session.getAttribute('canReadConsumables')}"/>
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/repairs.xhtml'"
+			value="Repairs" rendered="#{session.getAttribute('canReadRepair')}"/>
+
+	<h1>Groups</h1>
+	<h:messages style="color:red" />
+
+	<h:form rendered="#{!group.edit}">
+
+		<h:dataTable value="AddGroup" >
+			<f:facet name="header">
+		        Add group <br></br>
+		        
+		    </f:facet>
+
+
+			<h:column>
+			Users: <br></br>
+			C <h:selectBooleanCheckbox value="#{group.item.canCreateUser}" />
+			R <h:selectBooleanCheckbox value="#{group.item.canReadUser}" />
+			E <h:selectBooleanCheckbox value="#{group.item.canEditUser}" />
+			</h:column>
+			
+			
+			<h:column>
+			&emsp;Groups: <br></br>
+			&emsp;C <h:selectBooleanCheckbox value="#{group.item.canCreateGroup}" />
+			R <h:selectBooleanCheckbox value="#{group.item.canReadGroup}" />
+			E <h:selectBooleanCheckbox value="#{group.item.canEditGroup}" />
+			</h:column>
+			
+			<h:column>
+			&emsp;Devices: <br></br>
+			&emsp;C <h:selectBooleanCheckbox value="#{group.item.canCreateDevice}" />
+			R <h:selectBooleanCheckbox value="#{group.item.canReadDevice}" />
+			E <h:selectBooleanCheckbox value="#{group.item.canEditDevice}" />
+			</h:column>
+			
+			<h:column>
+			&emsp;Consumables: <br></br>
+			&emsp;C <h:selectBooleanCheckbox value="#{group.item.canCreateConsumables}" />
+			R <h:selectBooleanCheckbox value="#{group.item.canReadConsumables}" />
+			E <h:selectBooleanCheckbox value="#{group.item.canEditConsumables}" />
+			</h:column>
+			
+			<h:column>
+			&emsp;Repairs: <br></br>
+			&emsp;C <h:selectBooleanCheckbox value="#{group.item.canCreateRepair}" />
+			R <h:selectBooleanCheckbox value="#{group.item.canReadRepair}" />
+			E <h:selectBooleanCheckbox value="#{group.item.canEditRepair}" />
+			</h:column>
+			
+						
+			<f:facet name="footer">
+				<br></br>
+		        <h:outputText value="Name:" />
+				<br></br>
+				<h:inputText id="name" value="#{group.item.name}" size="20"
+					required="#{empty param['skipvalidation']}" label="name">
+					<f:validateLength minimum="2" maximum="20" />
+				</h:inputText>
+				&emsp; User can read only his data: <h:selectBooleanCheckbox value="#{group.item.ownedByUser}" />
+				
+				<br></br>
+				<br></br>
+				* Permissions:&emsp;
+				  C = can create, R = can read, E = can edit <br></br> <br></br>
+				<p>
+					<h:commandButton value="add" action="#{group.add}" />
+					<h:commandButton value="reset" action="#{group.resetAdd}"
+						immediate="true" />
+				</p>
+			</f:facet>
+		</h:dataTable>
+
+	</h:form>
+
+	<h:panelGroup rendered="#{group.edit}">
+		<h:form>
+			<h:dataTable value="EditUsers">
+				<f:facet name="header">
+        	Edit #{group.item.name}
+    	</f:facet>
+    	
+    	
+    	
+
+
+			<h:column>
+			Users: <br></br>
+			C <h:selectBooleanCheckbox value="#{group.item.canCreateUser}" />
+			R <h:selectBooleanCheckbox value="#{group.item.canReadUser}" />
+			E <h:selectBooleanCheckbox value="#{group.item.canEditUser}" />
+			</h:column>
+			
+			
+			<h:column>
+			&emsp;Groups: <br></br>
+			&emsp;C <h:selectBooleanCheckbox value="#{group.item.canCreateGroup}" />
+			R <h:selectBooleanCheckbox value="#{group.item.canReadGroup}" />
+			E <h:selectBooleanCheckbox value="#{group.item.canEditGroup}" />
+			</h:column>
+			
+			<h:column>
+			&emsp;Devices: <br></br>
+			&emsp;C <h:selectBooleanCheckbox value="#{group.item.canCreateDevice}" />
+			R <h:selectBooleanCheckbox value="#{group.item.canReadDevice}" />
+			E <h:selectBooleanCheckbox value="#{group.item.canEditDevice}" />
+			</h:column>
+			
+			<h:column>
+			&emsp;Consumables: <br></br>
+			&emsp;C <h:selectBooleanCheckbox value="#{group.item.canCreateConsumables}" />
+			R <h:selectBooleanCheckbox value="#{group.item.canReadConsumables}" />
+			E <h:selectBooleanCheckbox value="#{group.item.canEditConsumables}" />
+			</h:column>
+			
+			<h:column>
+			&emsp;Repairs: <br></br>
+			&emsp;C <h:selectBooleanCheckbox value="#{group.item.canCreateRepair}" />
+			R <h:selectBooleanCheckbox value="#{group.item.canReadRepair}" />
+			E <h:selectBooleanCheckbox value="#{group.item.canEditRepair}" />
+			</h:column>
+			
+						
+			<f:facet name="footer">
+				<br></br>
+		        <h:outputText value="Name:" />
+				<br></br>
+				<h:inputText id="name" value="#{group.item.name}" size="20"
+					required="true" label="name">
+					<f:validateLength minimum="2" maximum="20" />
+				</h:inputText>
+				&emsp; User can read only his data: <h:selectBooleanCheckbox value="#{group.item.ownedByUser}" />
+				
+				<br></br>
+				<br></br>
+				* Permissions:&emsp;
+				  C = can create, R = can read, E = can edit <br></br> <br></br>
+				<p>
+						<h:commandButton value="save" action="#{group.saveEdit}" />
+						<h:commandButton value="cancel" immediate="true" action="#{group.cancelEdit}" />
+					</p>
+			</f:facet>
+			
+			
+			
+
+				
+			</h:dataTable>
+		</h:form>
+	</h:panelGroup>
+
+
+	<h:form rendered="#{not empty group.getGroupList()}">
+		<h:dataTable value="#{group.list}" var="d" styleClass="order-table"
+			headerClass="order-table-header"
+			rowClasses="order-table-odd-row,order-table-even-row">
+
+			<h:column>
+				<f:facet name="header">
+	    				Group ID
+	    			</f:facet>
+	    				#{d.id}
+	    		</h:column>
+
+			<h:column>
+				<f:facet name="header">
+	    				Name
+					</f:facet>
+	    				#{d.name}
+	    		</h:column>
+
+			<h:column>
+				<f:facet name="header">
+	    				Edit
+					</f:facet>
+				<h:commandButton value="edit" action="#{group.edit(d)}" />
+				<h:commandButton value="delete" action="#{group.delete(d)}" />
+			</h:column>
+
+		</h:dataTable>
+	</h:form>
+
+	<h:panelGroup rendered="#{empty group.list}">
+		<p>No groups</p>
+	</h:panelGroup>
+	</h:panelGroup>
+
+	<h:panelGroup rendered="#{login.user==null}">
+		<h:link outcome="login" value="Go to login page" />
+	</h:panelGroup>
+</h:body>
+
+</html>

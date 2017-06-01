@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<h:outputStylesheet library="css" name="table-style.css" />
+</h:head>
+
+<h:body>
+	<h:panelGroup rendered="#{login.user!=null and session.getAttribute('canReadConsumables')}">
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/home.xhtml'"
+			value="Home"/>
+		<h:commandButton style="width: 120px "
+			onclick="window.location.href='/InventoryProject/users.xhtml'" 
+			value="Users" />
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/groups.xhtml'"
+			value="User groups" rendered="#{session.getAttribute('canReadGroup')}"/>
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/devices.xhtml'"
+			value="Devices" rendered="#{session.getAttribute('canReadDevice')}"/>
+		<h:commandButton style="width: 120px" disabled="true" 
+			onclick="window.location.href='/InventoryProject/consumables.xhtml'"
+			value="Consumables" rendered="#{session.getAttribute('canReadConsumables')}"/>
+		<h:commandButton style="width: 120px"
+			onclick="window.location.href='/InventoryProject/repairs.xhtml'"
+			value="Repairs" rendered="#{session.getAttribute('canReadRepair')}"/>
+	
+		<h1>Consumables</h1>
+		<h:messages style="color:red" />
+	
+		<h:form rendered="#{!consumable.edit}">
+	
+			<h:dataTable value="SearchAndAddConsumables">
+				<f:facet name="header">
+			        Search / add consumable
+			    </f:facet>
+	
+				<h:column>
+					<h:outputText value="Name:" />
+					<br></br>
+					<h:inputText id="name" value="#{consumable.item.name}" size="20"
+						required="#{empty param['skipvalidation']}" label="name">
+						<f:validateLength minimum="2" maximum="20" />
+					</h:inputText>
+					<br></br>
+				</h:column>
+				
+				<h:column>
+					<h:outputText value="Stock" />
+					<br></br>
+					<h:inputText id="stock" value="#{consumable.item.stock}"
+						size="20" required="#{empty param['skipvalidation']}"
+						label="stock">
+						<f:validateLength minimum="0" maximum="100" />
+					</h:inputText>
+				</h:column>
+	
+				<h:column>
+					<h:outputText value="Device name:" />
+					<br></br>				
+					<h:selectOneMenu value="#{consumable.selectedDevice}" converter="deviceConverter"
+						 				style="width:165px; height:20px">
+						<f:selectItem itemValue="#{null}" itemLabel=""/>
+						<f:selectItems value="#{device.list}" var="d"
+						        itemValue="#{d}" itemLabel="#{d.name}" />
+					</h:selectOneMenu> 
+	
+				</h:column>
+			
+				<f:facet name="footer">
+					<p>
+						<h:commandButton value="search" action="#{consumable.search}">
+							<f:param name="skipvalidation" value="1" />
+						</h:commandButton>
+						<h:commandButton value="add" action="#{consumable.add}" rendered="#{session.getAttribute('canCreateConsumables')}"/>
+						<h:commandButton value="reset" action="#{consumable.resetAdd}"
+							immediate="true" />
+					</p>
+				</f:facet>
+			</h:dataTable>
+	
+		</h:form>
+	
+		<h:panelGroup rendered="#{consumable.edit}">
+			<h:form>
+				<h:dataTable value="EditUsers">
+					<f:facet name="header">
+			        	Edit #{consumable.item.name}
+			    	</f:facet>
+	
+				<h:column>
+					<h:outputText value="Name:" />
+					<br></br>
+					<h:inputText id="name" value="#{consumable.item.name}" size="20"
+						required="true" label="name">
+						<f:validateLength minimum="2" maximum="20" />
+					</h:inputText>
+					<br></br>
+				</h:column>
+				
+				<h:column>
+					<h:outputText value="Stock" />
+					<br></br>
+					<h:inputText id="stock" value="#{consumable.item.stock}"
+						size="20" required="true"
+						label="stock">
+						<f:validateLength minimum="0" maximum="100" />
+					</h:inputText>
+				</h:column>
+	
+				<h:column>
+					<h:outputText value="Device name:" />
+					<br></br>				
+					<h:selectOneMenu value="#{consumable.selectedDevice}" converter="deviceConverter"
+						 				style="width:165px; height:20px">
+						<f:selectItem itemValue="#{consumable.selectedDevice}" itemLabel=""/>
+						<f:selectItems value="#{device.list}" var="d"
+						        itemLabel="#{d.name}" itemValue="#{d}" />
+					</h:selectOneMenu> 
+	
+				</h:column>
+				
+				<f:facet name="footer">
+					<p>
+						<h:commandButton value="save" action="#{consumable.saveEdit}" />
+						<h:commandButton value="cancel" immediate="true" action="#{consumable.cancelEdit}" />
+					</p>
+				</f:facet>
+				</h:dataTable>
+			</h:form>
+		</h:panelGroup>
+	
+	
+		<h:form rendered="#{not empty consumable.getConsumableList(
+		session.getAttribute('ownedByUser'), session.getAttribute('userid'))}">
+			<h:dataTable value="#{consumable.list}" var="c" styleClass="order-table"
+				headerClass="order-table-header"
+				rowClasses="order-table-odd-row,order-table-even-row">
+	
+				<h:column>
+					<f:facet name="header">
+		    				Consumable ID
+		    			</f:facet>
+		    				#{c.id}
+		    		</h:column>
+	
+				<h:column>
+					<f:facet name="header">
+		    				Name
+						</f:facet>
+		    				#{c.name}
+		    		</h:column>
+	
+				<h:column>
+					<f:facet name="header">
+		    				Device
+						</f:facet>
+		    				#{c.device_name}
+		    		</h:column>
+		    		
+				<h:column>
+					<f:facet name="header">
+		    				Stock
+						</f:facet>
+		    				#{c.stock}%
+		    		</h:column>
+	
+				
+				<h:column>
+					<f:facet name="header" rendered="#{session.getAttribute('canEditConsumable')}">
+		    				Edit
+						</f:facet>
+					<h:commandButton value="edit" action="#{consumable.edit(c, device)}" />
+					<h:commandButton value="delete" action="#{consumable.delete(c)}" />
+				</h:column>
+	
+			</h:dataTable>
+		</h:form>
+	
+		<h:panelGroup rendered="#{empty consumable.list}">
+			<p>No consumables</p>
+		</h:panelGroup>
+		
+	</h:panelGroup>
+
+	<h:panelGroup rendered="#{login.user==null}">
+		<h:link outcome="login" value="Go to login page" />
+	</h:panelGroup>
+
+</h:body>
+
+</html>
